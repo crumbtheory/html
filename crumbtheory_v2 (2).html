@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>CrumbTheory — Homemade Cookies · SoCal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500;1,700&family=DM+Sans:wght@300;400;500;600&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── tokens ── */
+    :root{
+      --bg:#fdf8f3;
+      --bg2:#fff9f4;
+      --cream:#fffbf7;
+      --blush:#f5d9cb;
+      --rose:#e8a898;
+      --lavender:#e0d0f5;
+      --lav-deep:#8b5ecf;
+      --caramel:#c0843b;
+      --choco:#6b3e26;
+      --ink:#2e1f14;
+      --muted:#7a5f50;
+      --muted2:#a8907e;
+      --white:rgba(255,255,255,.92);
+      --shadow:0 32px 80px rgba(90,55,25,.13);
+      --shadow-sm:0 12px 32px rgba(90,55,25,.09);
+      --ease:cubic-bezier(.22,1,.36,1);
+      --max:1160px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'DM Sans',sans-serif;
+      color:var(--ink);
+      background:var(--bg);
+      overflow-x:hidden;
+    }
+
+    /* grain texture overlay */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:999;
+      opacity:.022;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size:200px 200px;
+    }
+
+    .wrap{width:min(calc(100% - 40px),var(--max));margin:0 auto}
+
+    /* ── HEADER ── */
+    header{
+      position:sticky;top:0;z-index:100;
+      padding:0;
+      background:rgba(253,248,243,.78);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(180,130,90,.08);
+    }
+
+    nav{
+      display:flex;align-items:center;justify-content:space-between;
+      height:68px;
+    }
+
+    .logo{
+      text-decoration:none;
+      display:flex;align-items:center;
+      flex-shrink:0;
+    }
+
+    .logo-img{
+      height:40px;
+      width:auto;
+      max-width:160px;
+      object-fit:contain;
+      display:block;
+      filter:drop-shadow(0 2px 8px rgba(80,48,30,.10));
+    }
+
+    .nav-tag{
+      font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+      color:var(--muted2);font-weight:600;
+    }
+
+    .nav-cta{
+      display:flex;align-items:center;gap:8px;
+      text-decoration:none;
+      padding:10px 20px;border-radius:999px;
+      background:linear-gradient(135deg,#9a6dd4,#c47bb0,#d4896a);
+      color:#fff;font-size:13px;font-weight:600;
+      box-shadow:0 8px 24px rgba(154,109,212,.28);
+      transition:transform .2s var(--ease),box-shadow .2s var(--ease);
+    }
+    .nav-cta:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(154,109,212,.34)}
+    .nav-cta svg{width:15px;height:15px;fill:rgba(255,255,255,.8)}
+
+    /* ── HERO ── */
+    .hero{
+      padding:70px 0 0;
+      text-align:center;
+      position:relative;
+    }
+
+    /* ambient glow blobs */
+    .blob{
+      position:absolute;border-radius:50%;
+      pointer-events:none;filter:blur(60px);
+      animation:blobDrift 14s ease-in-out infinite;
+    }
+    .blob-1{width:420px;height:420px;left:-80px;top:0;background:rgba(245,217,203,.55);animation-delay:0s}
+    .blob-2{width:380px;height:380px;right:-60px;top:60px;background:rgba(224,208,245,.45);animation-delay:3s}
+    .blob-3{width:300px;height:300px;left:50%;top:300px;transform:translateX(-50%);background:rgba(232,168,152,.22);animation-delay:6s}
+
+    @keyframes blobDrift{
+      0%,100%{transform:translate(0,0) scale(1)}
+      33%{transform:translate(20px,-15px) scale(1.04)}
+      66%{transform:translate(-12px,10px) scale(.97)}
+    }
+    .blob-2{animation-name:blobDrift2}
+    @keyframes blobDrift2{
+      0%,100%{transform:translate(0,0) scale(1)}
+      33%{transform:translate(-18px,12px) scale(1.03)}
+      66%{transform:translate(14px,-8px) scale(.98)}
+    }
+
+    .hero-kicker{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 16px;border-radius:999px;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.9);
+      box-shadow:var(--shadow-sm);
+      font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+      color:var(--muted);font-weight:600;
+      margin-bottom:22px;
+      position:relative;z-index:2;
+      animation:fadeSlideUp .8s var(--ease) both;
+    }
+
+    .live-dot{
+      width:7px;height:7px;border-radius:50%;
+      background:#56c768;
+      box-shadow:0 0 0 4px rgba(86,199,104,.18);
+      animation:livePulse 2s ease-in-out infinite;
+    }
+    @keyframes livePulse{
+      0%,100%{box-shadow:0 0 0 4px rgba(86,199,104,.18)}
+      50%{box-shadow:0 0 0 7px rgba(86,199,104,.08)}
+    }
+
+    h1{
+      font-family:'Playfair Display',serif;
+      font-size:clamp(52px,8.5vw,118px);
+      font-weight:900;
+      line-height:.88;
+      letter-spacing:-.05em;
+      color:var(--ink);
+      margin-bottom:22px;
+      position:relative;z-index:2;
+      animation:fadeSlideUp .9s var(--ease) .1s both;
+    }
+
+    h1 em{
+      font-style:italic;
+      color:#8b5ecf;
+      background:linear-gradient(135deg,#9a6dd4 0%,#c47bb0 50%,#d4896a 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+
+    .hero-sub{
+      max-width:580px;margin:0 auto 32px;
+      font-size:17px;line-height:1.8;
+      color:var(--muted);
+      position:relative;z-index:2;
+      animation:fadeSlideUp .9s var(--ease) .2s both;
+    }
+
+    .hero-actions{
+      display:flex;justify-content:center;align-items:center;gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+      position:relative;z-index:2;
+      animation:fadeSlideUp .9s var(--ease) .3s both;
+    }
+
+    .btn-primary{
+      padding:16px 30px;border-radius:999px;
+      background:linear-gradient(135deg,#9a6dd4,#c47bb0,#d4896a);
+      color:#fff;text-decoration:none;font-size:15px;font-weight:600;
+      box-shadow:0 14px 38px rgba(154,109,212,.3);
+      transition:transform .22s var(--ease),box-shadow .22s var(--ease);
+      display:inline-flex;align-items:center;gap:8px;
+    }
+    .btn-primary:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 20px 48px rgba(154,109,212,.38)}
+    .btn-primary svg{width:16px;height:16px;fill:#fff}
+
+    .btn-ghost{
+      padding:16px 26px;border-radius:999px;
+      background:rgba(255,255,255,.8);
+      border:1px solid rgba(180,130,90,.14);
+      color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;
+      box-shadow:var(--shadow-sm);
+      transition:transform .22s var(--ease),box-shadow .22s var(--ease);
+    }
+    .btn-ghost:hover{transform:translateY(-2px)}
+
+    .trust-row{
+      display:flex;justify-content:center;align-items:center;gap:6px;
+      margin-bottom:52px;
+      font-size:13px;color:var(--muted2);
+      position:relative;z-index:2;
+      animation:fadeSlideUp .9s var(--ease) .4s both;
+    }
+
+    .stars{color:#e9a84a;letter-spacing:-1px;font-size:15px}
+
+    /* ── HERO VISUAL STAGE ── */
+    .hero-stage{
+      position:relative;
+      max-width:1080px;
+      margin:0 auto;
+      border-radius:44px 44px 0 0;
+      background:linear-gradient(180deg,#fffaf6 0%,#fff3e8 100%);
+      border:1px solid rgba(255,255,255,.86);
+      border-bottom:none;
+      box-shadow:0 -8px 60px rgba(90,55,25,.06), 0 0 0 1px rgba(200,150,100,.07);
+      min-height:600px;
+      overflow:hidden;
+      animation:fadeSlideUp .9s var(--ease) .5s both;
+    }
+
+    /* ── MOCK PHOTOS ── */
+    .photos-grid{
+      display:grid;
+      grid-template-columns:1.2fr 1fr 1fr;
+      gap:20px;
+      padding:36px 36px 0;
+      align-items:end;
+    }
+
+    .mock-photo{
+      border-radius:26px;
+      overflow:hidden;
+      position:relative;
+      box-shadow:0 24px 56px rgba(80,45,20,.13);
+      transform-origin:bottom center;
+    }
+
+    .mock-photo:nth-child(1){transform:rotate(-2.5deg) translateY(6px)}
+    .mock-photo:nth-child(2){transform:rotate(1.8deg) translateY(-4px)}
+    .mock-photo:nth-child(3){transform:rotate(-1.2deg) translateY(8px)}
+
+    .mock-photo:hover{
+      transform:rotate(0) translateY(-8px) scale(1.02) !important;
+      box-shadow:0 36px 70px rgba(80,45,20,.18);
+      z-index:10;
+    }
+
+    .mock-photo{transition:transform .4s var(--ease),box-shadow .4s var(--ease)}
+
+    /* Photo 1 - warm cookies overhead */
+    .mock-p1{
+      height:280px;
+      background:
+        radial-gradient(circle at 30% 35%, #f3c98a 0 28px,transparent 29px),
+        radial-gradient(circle at 62% 28%, #e8b96b 0 24px,transparent 25px),
+        radial-gradient(circle at 20% 68%, #e9bc72 0 26px,transparent 27px),
+        radial-gradient(circle at 72% 65%, #f0c780 0 22px,transparent 23px),
+        radial-gradient(circle at 46% 52%, #ebb76a 0 30px,transparent 31px),
+        /* choc chips */
+        radial-gradient(circle at 33% 30%, #5a2f14 0 5px,transparent 6px),
+        radial-gradient(circle at 68% 24%, #4e2810 0 4px,transparent 5px),
+        radial-gradient(circle at 25% 73%, #5c3018 0 5px,transparent 6px),
+        radial-gradient(circle at 78% 70%, #4a2412 0 4px,transparent 5px),
+        radial-gradient(circle at 50% 58%, #583019 0 5px,transparent 6px),
+        radial-gradient(circle at 38% 55%, #5e3318 0 4px,transparent 5px),
+        radial-gradient(circle at 60% 48%, #4c2811 0 4px,transparent 5px),
+        linear-gradient(160deg,#fde8c4 0%,#f5d09a 40%,#e8b96b 100%);
+    }
+
+    /* Photo 2 - lavender box close-up */
+    .mock-p2{
+      height:240px;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,.45),transparent 30%),
+        radial-gradient(circle at 20% 80%, rgba(200,170,240,.28),transparent 22%),
+        linear-gradient(165deg,#eedff9 0%,#ddc8f4 38%,#c9aeeb 65%,#bc9ee5 100%);
+    }
+
+    .box-art{
+      position:absolute;
+      inset:0;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      gap:6px;
+    }
+
+    .box-label{
+      font-family:'Playfair Display',serif;
+      font-size:22px;font-weight:700;font-style:italic;
+      color:rgba(100,60,150,.88);
+      letter-spacing:.02em;
+    }
+
+    .box-sub-label{
+      font-size:9px;letter-spacing:.28em;text-transform:uppercase;
+      color:rgba(130,90,180,.65);font-weight:600;
+    }
+
+    .ribbon-art{
+      width:60px;height:38px;position:relative;margin-bottom:4px;
+    }
+
+    .ribbon-art::before,.ribbon-art::after{
+      content:"";position:absolute;
+      width:26px;height:26px;
+      background:linear-gradient(135deg,#f0c4dc,#dda8ca);
+      border-radius:60% 45% 60% 45%;
+    }
+    .ribbon-art::before{left:4px;top:4px;transform:rotate(30deg)}
+    .ribbon-art::after{right:4px;top:4px;transform:rotate(-30deg)}
+
+    /* Photo 3 - hands with cookie / lifestyle */
+    .mock-p3{
+      height:260px;
+      background:
+        radial-gradient(circle at 50% 60%, #f2cda0 0 60px,transparent 62px),
+        radial-gradient(circle at 52% 62%, #5a301a 0 6px,transparent 7px),
+        radial-gradient(circle at 40% 55%, #61331c 0 5px,transparent 6px),
+        radial-gradient(circle at 62% 55%, #56291a 0 5px,transparent 6px),
+        radial-gradient(circle at 50% 50%, #df9f64 0 52px,transparent 54px),
+        /* warm hands skin tone */
+        radial-gradient(circle at 28% 78%, #e8c0a0 0 55px,transparent 56px),
+        radial-gradient(circle at 72% 76%, #ddb898 0 45px,transparent 46px),
+        radial-gradient(circle at 50% 88%, #d4a888 0 90px,transparent 92px),
+        linear-gradient(180deg,#fdf3ea 0%,#f5e0c8 50%,#e8c9a8 100%);
+    }
+
+    .photo-caption{
+      position:absolute;bottom:14px;left:14px;
+      padding:6px 12px;border-radius:999px;
+      background:rgba(255,250,245,.9);
+      border:1px solid rgba(255,255,255,.9);
+      font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+      color:#7a5040;
+      backdrop-filter:blur(8px);
+    }
+
+    .tape{
+      position:absolute;top:14px;left:50%;transform:translateX(-50%) rotate(-3deg);
+      width:70px;height:20px;
+      background:rgba(255,245,210,.72);
+      border:1px solid rgba(255,255,255,.5);
+      border-radius:4px;
+      box-shadow:0 4px 10px rgba(80,48,30,.07);
+      z-index:3;
+    }
+
+    /* Floating badge in stage */
+    .stage-badge{
+      position:absolute;
+      right:36px;top:36px;
+      padding:14px 18px;
+      border-radius:20px;
+      background:rgba(255,255,255,.88);
+      border:1px solid rgba(255,255,255,.9);
+      box-shadow:var(--shadow-sm);
+      backdrop-filter:blur(12px);
+      text-align:left;
+      max-width:170px;
+      transform:rotate(3deg);
+      animation:badgeFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes badgeFloat{
+      0%,100%{transform:rotate(3deg) translateY(0)}
+      50%{transform:rotate(3deg) translateY(-7px)}
+    }
+
+    .badge-emoji{font-size:22px;margin-bottom:4px;display:block}
+    .badge-text{font-size:13px;font-weight:600;color:var(--ink);line-height:1.3}
+    .badge-sub{font-size:11px;color:var(--muted2);margin-top:2px}
+
+    /* Handwritten note */
+    .stage-note{
+      position:absolute;
+      left:28px;top:32px;
+      max-width:160px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:rgba(255,252,240,.92);
+      border:1px solid rgba(255,245,200,.6);
+      box-shadow:var(--shadow-sm);
+      transform:rotate(-4deg);
+      animation:noteWobble 7s ease-in-out infinite;
+    }
+
+    @keyframes noteWobble{
+      0%,100%{transform:rotate(-4deg) translateY(0)}
+      50%{transform:rotate(-3deg) translateY(-5px)}
+    }
+
+    .stage-note-text{
+      font-family:'Caveat',cursive;
+      font-size:16px;font-weight:500;
+      color:#5e4030;
+      line-height:1.5;
+    }
+
+    .stage-note-line{
+      width:100%;height:1px;
+      background:rgba(180,140,90,.15);
+      margin:6px 0;
+    }
+
+    /* ── SOCIAL PROOF BAR ── */
+    .proof-bar{
+      background:var(--ink);
+      padding:14px 0;
+      overflow:hidden;
+    }
+
+    .proof-scroll{
+      display:flex;gap:48px;
+      white-space:nowrap;
+      animation:scrollTicker 28s linear infinite;
+    }
+
+    @keyframes scrollTicker{
+      0%{transform:translateX(0)}
+      100%{transform:translateX(-50%)}
+    }
+
+    .proof-item{
+      display:inline-flex;align-items:center;gap:10px;
+      font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+      color:rgba(255,255,255,.55);font-weight:600;flex-shrink:0;
+    }
+
+    .proof-item::before{
+      content:"✦";color:rgba(192,132,59,.7);font-size:10px;
+    }
+
+    /* ── SECTIONS ── */
+    section{padding:80px 0}
+
+    /* fade-in observer class */
+    .reveal{
+      opacity:0;transform:translateY(28px);
+      transition:opacity .7s var(--ease),transform .7s var(--ease);
+    }
+    .reveal.visible{opacity:1;transform:none}
+    .reveal-delay-1{transition-delay:.1s}
+    .reveal-delay-2{transition-delay:.2s}
+    .reveal-delay-3{transition-delay:.3s}
+    .reveal-delay-4{transition-delay:.4s}
+
+    /* section label */
+    .section-tag{
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+      color:var(--muted2);font-weight:600;
+      margin-bottom:16px;
+    }
+
+    .section-tag::before{
+      content:"";width:22px;height:1px;background:currentColor;opacity:.5;
+    }
+
+    h2{
+      font-family:'Playfair Display',serif;
+      font-size:clamp(38px,5.5vw,72px);
+      font-weight:900;line-height:.9;
+      letter-spacing:-.04em;
+      color:var(--ink);
+      margin-bottom:16px;
+    }
+
+    h2 em{font-style:italic;color:#8b5ecf}
+
+    /* ── FLAVOR CARDS ── */
+    .flavors-section{background:var(--cream)}
+
+    .flavors-grid{
+      display:grid;grid-template-columns:1fr 1fr;gap:24px;
+      max-width:900px;margin:0 auto;
+    }
+
+    .flavor-card{
+      border-radius:32px;
+      padding:32px;
+      background:rgba(255,255,255,.9);
+      border:1px solid rgba(255,255,255,.95);
+      box-shadow:var(--shadow-sm);
+      display:flex;align-items:flex-start;gap:20px;
+      transition:transform .32s var(--ease),box-shadow .32s var(--ease);
+      cursor:default;
+    }
+
+    .flavor-card:hover{
+      transform:translateY(-6px) rotate(.3deg);
+      box-shadow:0 28px 64px rgba(90,55,25,.13);
+    }
+
+    /* CSS Cookie visual */
+    .cookie-vis{
+      width:100px;height:100px;flex-shrink:0;
+      border-radius:50%;
+      position:relative;
+      box-shadow:inset -12px -16px 0 rgba(115,72,34,.07),
+                 inset 8px 8px 16px rgba(255,245,232,.2),
+                 0 10px 24px rgba(77,50,29,.12);
+      transition:transform .4s var(--ease);
+    }
+
+    .flavor-card:hover .cookie-vis{transform:rotate(12deg) scale(1.08)}
+
+    .cookie-choc{
+      background:radial-gradient(circle at 35% 30%,#f5d9ae 0%,#d8a05e 55%,#c08040 100%);
+    }
+
+    .cookie-choc::before{
+      content:"";position:absolute;inset:0;border-radius:50%;
+      background:
+        radial-gradient(circle at 26% 26%,#5a3020 0 7px,transparent 8px),
+        radial-gradient(circle at 64% 28%,#4e2610 0 8px,transparent 9px),
+        radial-gradient(circle at 40% 60%,#5c2f1e 0 7px,transparent 8px),
+        radial-gradient(circle at 76% 65%,#48240e 0 9px,transparent 10px),
+        radial-gradient(circle at 28% 76%,#602e20 0 7px,transparent 8px),
+        radial-gradient(circle at 52% 48%,rgba(255,255,255,.9) 0 2px,transparent 3px),
+        radial-gradient(circle at 58% 54%,rgba(255,255,255,.9) 0 2px,transparent 3px);
+    }
+
+    .cookie-white{
+      background:radial-gradient(circle at 35% 30%,#f7e3bc 0%,#e0b06e 58%,#cf9050 100%);
+    }
+
+    .cookie-white::before{
+      content:"";position:absolute;inset:0;border-radius:50%;
+      background:
+        radial-gradient(circle at 26% 26%,#f9eedc 0 7px,transparent 8px),
+        radial-gradient(circle at 64% 28%,#fff2e0 0 8px,transparent 9px),
+        radial-gradient(circle at 40% 60%,#f7e8d5 0 7px,transparent 8px),
+        radial-gradient(circle at 76% 65%,#fff6e8 0 8px,transparent 9px),
+        radial-gradient(circle at 28% 76%,#f5e2ce 0 7px,transparent 8px),
+        radial-gradient(circle at 56% 78%,#d4a870 0 8px,transparent 9px);
+    }
+
+    .flavor-info h3{
+      font-family:'Playfair Display',serif;
+      font-size:24px;font-weight:700;
+      color:var(--ink);margin-bottom:8px;letter-spacing:-.02em;
+    }
+
+    .flavor-info p{
+      font-size:14px;line-height:1.75;color:var(--muted);
+    }
+
+    .flavor-tag{
+      display:inline-block;
+      margin-top:12px;padding:5px 12px;border-radius:999px;
+      background:linear-gradient(135deg,rgba(154,109,212,.1),rgba(196,123,176,.1));
+      border:1px solid rgba(154,109,212,.18);
+      font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--lav-deep);
+    }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-section{background:var(--bg)}
+
+    .reviews-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+      max-width:1020px;margin:0 auto;
+    }
+
+    .review-card{
+      border-radius:28px;
+      padding:26px;
+      background:rgba(255,255,255,.86);
+      border:1px solid rgba(255,255,255,.95);
+      box-shadow:var(--shadow-sm);
+      transition:transform .3s var(--ease),box-shadow .3s var(--ease);
+    }
+
+    .review-card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 22px 52px rgba(90,55,25,.11);
+    }
+
+    .review-stars{color:#e9a84a;font-size:14px;margin-bottom:12px;letter-spacing:1px}
+
+    .review-text{
+      font-size:15px;line-height:1.75;color:var(--muted);
+      font-style:italic;margin-bottom:16px;
+    }
+
+    .review-text::before{content:"❝ ";color:rgba(154,109,212,.3);font-style:normal;font-size:18px}
+
+    .reviewer{display:flex;align-items:center;gap:10px}
+
+    .avatar{
+      width:38px;height:38px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:15px;font-weight:700;color:#fff;
+      flex-shrink:0;
+    }
+
+    .av-a{background:linear-gradient(135deg,#d4896a,#c07060)}
+    .av-b{background:linear-gradient(135deg,#9a6dd4,#7a4db8)}
+    .av-c{background:linear-gradient(135deg,#c47bb0,#a05890)}
+
+    .reviewer-info strong{display:block;font-size:13px;font-weight:600;color:var(--ink)}
+    .reviewer-info span{font-size:11px;color:var(--muted2)}
+
+    /* ── SIZES ── */
+    .sizes-section{background:var(--cream)}
+
+    .sizes-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+      max-width:900px;margin:0 auto;
+    }
+
+    .size-card{
+      text-align:center;
+      padding:28px 16px;
+      border-radius:28px;
+      background:rgba(255,255,255,.88);
+      border:1px solid rgba(255,255,255,.95);
+      box-shadow:var(--shadow-sm);
+      transition:transform .28s var(--ease),box-shadow .28s var(--ease),background .28s;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .size-card::before{
+      content:"";position:absolute;inset:0;
+      background:linear-gradient(135deg,rgba(154,109,212,.06),rgba(196,123,176,.06));
+      opacity:0;transition:opacity .28s;
+    }
+
+    .size-card:hover::before{opacity:1}
+    .size-card:hover{transform:translateY(-6px);box-shadow:0 22px 52px rgba(90,55,25,.12)}
+
+    .size-card.featured{
+      background:linear-gradient(160deg,#9a6dd4,#c47bb0);
+      border-color:transparent;
+    }
+
+    .size-card.featured .size-num,.size-card.featured .size-name{color:#fff}
+    .size-card.featured .size-badge{background:rgba(255,255,255,.22);color:#fff}
+
+    .size-num{
+      font-family:'Playfair Display',serif;
+      font-size:68px;font-weight:900;line-height:.85;
+      letter-spacing:-.04em;
+      color:var(--ink);display:block;margin-bottom:6px;
+    }
+
+    .size-name{display:block;font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.05em}
+
+    .size-badge{
+      display:inline-block;margin-top:10px;
+      padding:4px 10px;border-radius:999px;
+      background:rgba(154,109,212,.1);
+      border:1px solid rgba(154,109,212,.14);
+      font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--lav-deep);
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-section{background:var(--bg)}
+
+    .steps-row{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:32px;
+      max-width:900px;margin:0 auto;
+    }
+
+    .step{
+      text-align:center;
+      padding:28px 20px;
+    }
+
+    .step-icon{
+      width:64px;height:64px;border-radius:50%;
+      background:linear-gradient(135deg,rgba(154,109,212,.12),rgba(196,123,176,.12));
+      border:1px solid rgba(154,109,212,.16);
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 16px;
+      font-size:26px;
+      transition:transform .3s var(--ease);
+    }
+
+    .step:hover .step-icon{transform:scale(1.1) rotate(5deg)}
+
+    .step h4{
+      font-family:'Playfair Display',serif;
+      font-size:22px;font-weight:700;
+      color:var(--ink);margin-bottom:8px;
+    }
+
+    .step p{font-size:14px;line-height:1.75;color:var(--muted)}
+
+    /* ── CTA SECTION ── */
+    .cta-section{
+      background:var(--ink);
+      padding:80px 0;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .cta-section::before{
+      content:"";position:absolute;
+      width:600px;height:600px;border-radius:50%;
+      left:-150px;top:-200px;
+      background:radial-gradient(circle,rgba(154,109,212,.14),transparent 70%);
+      pointer-events:none;
+    }
+
+    .cta-section::after{
+      content:"";position:absolute;
+      width:500px;height:500px;border-radius:50%;
+      right:-100px;bottom:-200px;
+      background:radial-gradient(circle,rgba(212,137,106,.1),transparent 70%);
+      pointer-events:none;
+    }
+
+    .cta-section h2{color:#fff}
+    .cta-section h2 em{
+      background:linear-gradient(135deg,#c9a0f0,#f0b8a0);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+
+    .cta-section p{
+      max-width:500px;margin:0 auto 32px;
+      font-size:16px;line-height:1.8;color:rgba(255,255,255,.6);
+    }
+
+    .btn-white{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:18px 34px;border-radius:999px;
+      background:#fff;color:var(--ink);
+      text-decoration:none;font-size:15px;font-weight:600;
+      box-shadow:0 14px 40px rgba(0,0,0,.25);
+      transition:transform .22s var(--ease),box-shadow .22s var(--ease);
+    }
+
+    .btn-white:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 20px 52px rgba(0,0,0,.32)}
+    .btn-white svg{width:18px;height:18px;fill:var(--lav-deep)}
+
+    .cta-note{
+      margin-top:20px;font-size:13px;
+      color:rgba(255,255,255,.38);letter-spacing:.05em;
+    }
+
+    /* ── FOOTER ── */
+    footer{
+      background:var(--ink);
+      border-top:1px solid rgba(255,255,255,.06);
+      padding:30px 0;
+      display:flex;align-items:center;justify-content:center;
+    }
+
+    .footer-inner{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:20px;flex-wrap:wrap;
+    }
+
+    .footer-brand{
+      font-family:'Playfair Display',serif;
+      font-size:20px;font-weight:700;color:rgba(255,255,255,.7);
+    }
+
+    .footer-text{font-size:13px;color:rgba(255,255,255,.35)}
+
+    .footer-ig{
+      display:flex;align-items:center;gap:6px;
+      text-decoration:none;
+      font-size:13px;font-weight:500;color:rgba(255,255,255,.5);
+      transition:color .2s;
+    }
+    .footer-ig:hover{color:rgba(255,255,255,.8)}
+    .footer-ig svg{width:16px;height:16px;fill:currentColor}
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeSlideUp{
+      from{opacity:0;transform:translateY(24px)}
+      to{opacity:1;transform:none}
+    }
+
+    /* ── HERO FULLBLEED IMAGE ── */
+    .hero-fullbleed{
+      width:100%;
+      margin-top:48px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-fullbleed-img{
+      width:100%;
+      height:clamp(360px,52vw,680px);
+      object-fit:cover;
+      object-position:center 22%;
+      display:block;
+    }
+
+    .hero-fullbleed-fade{
+      position:absolute;
+      bottom:0;left:0;right:0;
+      height:160px;
+      background:linear-gradient(to bottom,transparent 0%,rgba(20,12,6,.78) 100%);
+      pointer-events:none;
+    }
+
+    .hero-img-pill{
+      position:absolute;
+      bottom:32px;left:50%;transform:translateX(-50%);
+      display:inline-flex;align-items:center;gap:10px;
+      padding:11px 22px;border-radius:999px;
+      background:rgba(255,255,255,.13);
+      border:1px solid rgba(255,255,255,.22);
+      backdrop-filter:blur(14px);
+      color:rgba(255,255,255,.92);
+      font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .hero-img-pill::before{
+      content:"";width:7px;height:7px;border-radius:50%;
+      background:#aff5a0;box-shadow:0 0 0 4px rgba(175,245,160,.22);
+      animation:livePulse 2s ease-in-out infinite;
+    }
+
+    /* ── STAGE SECTION ── */
+    .stage-section{
+      background:var(--cream);
+      padding:72px 0 80px;
+    }
+
+    .stage-section-header{
+      text-align:center;
+      margin-bottom:40px;
+    }
+
+    /* override hero-stage for standalone use */
+    .stage-section .hero-stage{
+      border-radius:32px;
+      animation:none;
+      max-width:1080px;
+      margin:0 auto;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px){
+      .photos-grid{grid-template-columns:1fr 1fr;padding:24px 24px 0}
+      .mock-photo:nth-child(3){display:none}
+      .reviews-grid{grid-template-columns:1fr 1fr}
+      .reviews-grid .review-card:nth-child(3){display:none}
+      .sizes-grid{grid-template-columns:repeat(2,1fr)}
+      .flavors-grid{grid-template-columns:1fr}
+      .steps-row{grid-template-columns:1fr}
+      .stage-badge{display:none}
+    }
+
+    @media(max-width:560px){
+      .logo-img{height:32px;max-width:120px}
+      h1{font-size:clamp(44px,13vw,68px)}
+      .nav-tag{display:none}
+      .hero-stage{border-radius:28px 28px 0 0;min-height:340px}
+      .photos-grid{grid-template-columns:1fr;padding:16px 16px 0}
+      .mock-photo:nth-child(2){display:none}
+      .reviews-grid{grid-template-columns:1fr}
+      .sizes-grid{grid-template-columns:repeat(2,1fr)}
+      .stage-note{display:none}
+      section{padding:56px 0}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation:none!important;transition:none!important}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="#">
+        <img src="cmlogo.png" alt="CrumbTheory" class="logo-img">
+      </a>
+      <div class="nav-tag">Homemade · SoCal</div>
+      <a class="nav-cta" href="https://instagram.com/crumbtheory.oc">
+        <svg viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5Zm8.9 1.6a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3ZM12 6.5A5.5 5.5 0 1 1 6.5 12 5.51 5.51 0 0 1 12 6.5Zm0 1.5A4 4 0 1 0 16 12a4 4 0 0 0-4-4Z"/></svg>
+        Order Now
+      </a>
+    </nav>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="wrap">
+    <div class="hero-kicker">
+      <div class="live-dot"></div>
+      Taking orders now · Orange County
+    </div>
+
+    <h1>Ridiculously<br>Good <em>Cookies.</em></h1>
+
+    <p class="hero-sub">Small-batch, soft-baked cookies. Two flavors. Real ingredients. </p>
+
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://instagram.com/crumbtheory.oc">
+        <svg viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5Zm8.9 1.6a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3ZM12 6.5A5.5 5.5 0 1 1 6.5 12 5.51 5.51 0 0 1 12 6.5Zm0 1.5A4 4 0 1 0 16 12a4 4 0 0 0-4-4Z"/></svg>
+        Order on Instagram
+      </a>
+      <a class="btn-ghost" href="#flavors">See our flavors ↓</a>
+    </div>
+
+    <div class="trust-row">
+      <span class="stars">★★★★★</span>
+      <span>5.0 · loved by 200+ customers in SoCal</span>
+    </div>
+  </div><!-- /wrap -->
+
+  <!-- Full-bleed hero photo — edge to edge -->
+  <div class="hero-fullbleed">
+    <img
+      src="cmbox.png"
+      alt="CrumbTheory signature lavender cookie box"
+      class="hero-fullbleed-img"
+    >
+    <div class="hero-fullbleed-fade"></div>
+    <div class="hero-img-pill">Real Ingredients · Big Flavor · Better Moments</div>
+  </div>
+</section>
+
+<!-- ── TICKER ── -->
+<div class="proof-bar">
+  <div class="proof-scroll">
+    <!-- doubled for seamless loop -->
+    <span class="proof-item">Small batch baked</span>
+    <span class="proof-item">Fresh to order</span>
+    <span class="proof-item">Orange County pickup</span>
+    <span class="proof-item">Walnut chocolate chip sea salt</span>
+    <span class="proof-item">White chocolate macadamia</span>
+    <span class="proof-item">DM to order</span>
+    <span class="proof-item">6 · 12 · 24 · 36 cookies</span>
+    <span class="proof-item">Small batch baked</span>
+    <span class="proof-item">Fresh to order</span>
+    <span class="proof-item">Orange County pickup</span>
+    <span class="proof-item">Walnut chocolate chip sea salt</span>
+    <span class="proof-item">White chocolate macadamia</span>
+    <span class="proof-item">DM to order</span>
+    <span class="proof-item">6 · 12 · 24 · 36 cookies</span>
+  </div>
+</div>
+
+<!-- ── SECTION 2: The Stage ── -->
+<section class="stage-section">
+  <div class="wrap">
+
+    <div class="stage-section-header reveal">
+      <h2 style="margin-top:8px">Made with <em>Passion.</em></h2>
+    </div>
+
+    <div class="hero-stage">
+      <div class="stage-note">
+        <span class="stage-note-text">fresh from the oven 🍪</span>
+        <div class="stage-note-line"></div>
+        <span class="stage-note-text" style="font-size:13px">made to order, every time</span>
+      </div>
+
+      <div class="photos-grid">
+        <div class="mock-photo">
+          <div class="tape"></div>
+          <div class="mock-p1"></div>
+          <div class="photo-caption">Fresh from the oven</div>
+        </div>
+        <div class="mock-photo">
+          <div class="tape"></div>
+          <div class="mock-p2">
+            <div class="box-art">
+              <div class="ribbon-art"></div>
+              <div class="box-label">CrumbTheory</div>
+              <div class="box-sub-label">handmade · OC</div>
+            </div>
+          </div>
+          <div class="photo-caption">Addictive</div>
+        </div>
+        <div class="mock-photo">
+          <div class="tape"></div>
+          <div class="mock-p3"></div>
+          <div class="photo-caption">Soft center</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FLAVORS ── -->
+<section class="flavors-section" id="flavors">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:44px">
+      <div class="section-tag reveal">The Flavors</div>
+      <h2 class="reveal reveal-delay-1">Two classics, <em>done right.</em></h2>
+      <p style="max-width:520px;margin:0 auto;color:var(--muted);line-height:1.8;font-size:16px" class="reveal reveal-delay-2">Impossible to share. We bake two flavors with one word in mind. "Addictive"</p>
+    </div>
+
+    <div class="flavors-grid">
+      <div class="flavor-card reveal reveal-delay-2">
+        <div class="cookie-vis cookie-choc"></div>
+        <div class="flavor-info">
+          <h3>Walnut Chocolate Chip Sea Salt</h3>
+          <p>Crisp edges, gooey center, chunks of dark chocolate, toasted walnuts, and a finish of flaky sea salt that hits different.</p>
+          <span class="flavor-tag">🍫 The Classic</span>
+        </div>
+      </div>
+
+      <div class="flavor-card reveal reveal-delay-3">
+        <div class="cookie-vis cookie-white"></div>
+        <div class="flavor-info">
+          <h3>White Chocolate Macadamia</h3>
+          <p>Buttery, creamy, and packed with white chocolate chips and roasted macadamias. Soft, warm, and baked just right every time..</p>
+          <span class="flavor-tag">🤍 The Fan Favorite</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── REVIEWS ── -->
+<section class="testimonials-section">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:44px">
+      <div class="section-tag reveal">What people are saying</div>
+      <h2 class="reveal reveal-delay-1">They couldn't stop<br><em>at one.</em></h2>
+    </div>
+
+    <div class="reviews-grid">
+      <div class="review-card reveal reveal-delay-1">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">I ordered a box of 12 for my friend's birthday and she texted me before she even got home. These cookies are unreal,the white chocolate one is addicting.</p>
+        <div class="reviewer">
+          <div class="avatar av-a">M</div>
+          <div class="reviewer-info">
+            <strong>Maya R.</strong>
+            <span>Irvine, CA · repeat customer</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card reveal reveal-delay-2">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Brought these to a housewarming and everyone asked where they came from. Already ordered a box for myself.</p>
+        <div class="reviewer">
+          <div class="avatar av-b">J</div>
+          <div class="reviewer-info">
+            <strong>Jason T.</strong>
+            <span>Anaheim, CA · first-time order</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card reveal reveal-delay-3">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Soft, warm, just perfect! The macadamia one is my weakness. CrumbTheory is the only cookie brand I recommend.</p>
+        <div class="reviewer">
+          <div class="avatar av-c">S</div>
+          <div class="reviewer-info">
+            <strong>Sofia K.</strong>
+            <span>Newport Beach, CA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SIZES ── -->
+<section class="sizes-section" id="sizes">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:44px">
+      <div class="section-tag reveal">Box Sizes</div>
+      <h2 class="reveal reveal-delay-1">Pick your <em>perfect box.</em></h2>
+      <p style="max-width:480px;margin:0 auto;color:var(--muted);line-height:1.8;font-size:15px" class="reveal reveal-delay-2">From a personal treat to a full on gifting moment. DM us your size and we'll handle the rest.</p>
+    </div>
+
+    <div class="sizes-grid">
+      <div class="size-card reveal reveal-delay-1">
+        <span class="size-num">6</span>
+        <span class="size-name">Box of Six</span>
+        <div class="size-badge">Just for you</div>
+      </div>
+      <div class="size-card featured reveal reveal-delay-2">
+        <span class="size-num">12</span>
+        <span class="size-name">Box of Twelve</span>
+        <div class="size-badge">Most popular</div>
+      </div>
+      <div class="size-card reveal reveal-delay-3">
+        <span class="size-num">24</span>
+        <span class="size-name">Box of 24</span>
+        <div class="size-badge">Great for gifting</div>
+      </div>
+      <div class="size-card reveal reveal-delay-4">
+        <span class="size-num">36</span>
+        <span class="size-name">Box of 36</span>
+        <div class="size-badge">Party size</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="how-section">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:48px">
+      <div class="section-tag reveal">How it works</div>
+      <h2 class="reveal reveal-delay-1">Ordering is<br><em>ridiculously easy.</em></h2>
+    </div>
+
+    <div class="steps-row">
+      <div class="step reveal reveal-delay-1">
+        <div class="step-icon">📱</div>
+        <h4>1. DM us</h4>
+        <p>Send us a message on Instagram. Tell us your box size and flavor mix — we'll reply fast.</p>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-icon">🍪</div>
+        <h4>2. We bake fresh</h4>
+        <p>Every order is baked to order. No pre-made batches sitting around — just fresh cookies for you.</p>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step-icon">📦</div>
+        <h4>3. Pick up &amp; enjoy</h4>
+        <p>Grab your cookies and dig in while they're still warm. You'll be back. They always come back.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section">
+  <div class="wrap" style="position:relative;z-index:2">
+    <div class="section-tag reveal" style="color:rgba(255,255,255,.35);justify-content:center">Ready?</div>
+    <h2 class="reveal reveal-delay-1">Your box is<br><em>waiting.</em></h2>
+    <p class="reveal reveal-delay-2">Slide into our DMs on Instagram. Takes 30 seconds. Cookies arrive with your name on the box.</p>
+    <a class="btn-white reveal reveal-delay-3" href="https://instagram.com/crumbtheory.oc">
+      <svg viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5Zm8.9 1.6a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3ZM12 6.5A5.5 5.5 0 1 1 6.5 12 5.51 5.51 0 0 1 12 6.5Zm0 1.5A4 4 0 1 0 16 12a4 4 0 0 0-4-4Z"/></svg>
+      DM us on Instagram
+    </a>
+    <div class="cta-note reveal reveal-delay-4">@crumbtheory.oc · Orange County, CA · Pickup only</div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="wrap footer-inner">
+    <div class="footer-brand">CrumbTheory</div>
+    <div class="footer-text">© 2025 · Homemade cookies · SoCal pickup only</div>
+    <a class="footer-ig" href="https://instagram.com/crumbtheory.oc">
+      <svg viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5Zm8.9 1.6a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3ZM12 6.5A5.5 5.5 0 1 1 6.5 12 5.51 5.51 0 0 1 12 6.5Zm0 1.5A4 4 0 1 0 16 12a4 4 0 0 0-4-4Z"/></svg>
+      @crumbtheory.oc
+    </a>
+  </div>
+</footer>
+
+<script>
+  // Parallax on hero image
+  const heroImg = document.querySelector('.hero-fullbleed-img');
+  if(heroImg){
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      heroImg.style.transform = `scale(1.04) translateY(${y * 0.18}px)`;
+    }, { passive: true });
+  }
+
+  // Scroll-reveal with IntersectionObserver
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // Subtle cursor-follow tilt on flavor cards
+  document.querySelectorAll('.flavor-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left - r.width/2) / r.width;
+      const y = (e.clientY - r.top - r.height/2) / r.height;
+      card.style.transform = `translateY(-6px) rotateY(${x*5}deg) rotateX(${-y*4}deg)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+
+  // Size card: click highlight
+  document.querySelectorAll('.size-card').forEach(card => {
+    if(card.classList.contains('featured')) return;
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.size-card').forEach(c => c.classList.remove('featured'));
+      card.classList.add('featured');
+    });
+  });
+</script>
+</body>
+</html>
