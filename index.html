@@ -569,6 +569,26 @@
       color:var(--lav-deep);
     }
 
+    .cookie-pistachio {
+  background: radial-gradient(circle at 35% 30%, #f4d8ad 0%, #c99252 70%);
+  position: relative;
+}
+
+.cookie-pistachio::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 25% 25%, #6f4a2f 0 5px, transparent 6px), /* choc chip */
+    radial-gradient(circle at 65% 35%, #6f4a2f 0 6px, transparent 7px),
+    radial-gradient(circle at 50% 65%, #6f4a2f 0 5px, transparent 6px),
+
+    radial-gradient(circle at 35% 45%, #7dbb5f 0 6px, transparent 7px), /* pistachio */
+    radial-gradient(circle at 70% 70%, #6fae55 0 7px, transparent 8px),
+    radial-gradient(circle at 20% 70%, #8cc96a 0 5px, transparent 6px);
+}
+
     /* ── TESTIMONIALS ── */
     .testimonials-section{background:var(--bg)}
 
